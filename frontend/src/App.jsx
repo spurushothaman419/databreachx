@@ -14,11 +14,12 @@ function App() {
     console.log('API URL:', baseUrl);
   }, []);
 
-  return (
-    <div>
-      <h1>{message}</h1>
-    </div>
-  );
+ return (
+  <div>
+    <h1>{message}</h1>
+    <h2>{import.meta.env.VITE_API_URL}</h2> {/* ✅ render API URL */}
+  </div>
+);
 }
 
 export default App;
