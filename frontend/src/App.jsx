@@ -2,9 +2,13 @@ import { useEffect, useState } from "react";
 
 function App() {
   const [message, setMessage] = useState("Connecting to API...");
-  
+
+  const apiUrl = import.meta.env.VITE_API_URL;
+
+  // ✅ Debug log to confirm env variable
+  console.log("✅ ENV VITE_API_URL:", apiUrl);
+
   useEffect(() => {
-    console.log("✅ ENV VITE_API_URL:", import.meta.env.VITE_API_URL); // Debug log
     fetch(`${apiUrl}/`)
       .then((res) => res.json())
       .then((data) => setMessage(data.message))
@@ -17,9 +21,9 @@ function App() {
   return (
     <div className="p-6 text-xl font-bold">
       <h1>{message}</h1>
-      <p style={{ fontSize: "14px", color: "gray" }}>
-        ENV: {apiUrl || "ENV not loaded"}
-      </p>
+      <h2 className="text-sm text-red-600">
+        🔍 {apiUrl || "ENV not loaded"}
+      </h2>
     </div>
   );
 }
