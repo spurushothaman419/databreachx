@@ -1,8 +1,17 @@
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, Request
 from pydantic import BaseModel
 import spacy
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["https://databreachx.vercel.app"],  # 👈 your frontend domain
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 nlp = spacy.load("en_core_web_sm")
 
