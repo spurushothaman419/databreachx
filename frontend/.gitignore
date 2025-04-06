@@ -1,2 +1,4 @@
-# Ignore all env files (dev + prod)
-.env.*
+# frontend/.gitignore
+node_modules/
+dist/
+.env*
