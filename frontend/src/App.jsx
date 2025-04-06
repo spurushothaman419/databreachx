@@ -10,9 +10,9 @@ function App() {
     e.preventDefault();
     setLoading(true);
     setError(null);
-
+ const API_URL = import.meta.env.VITE_API_URL;
     try {
-      const res = await fetch("https://databreachx-api.onrender.com/entities", {
+     const res = await fetch(`${API_URL}/entities`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

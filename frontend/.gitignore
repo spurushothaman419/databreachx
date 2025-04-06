@@ -1,3 +1,4 @@
 # frontend/.gitignore
 dist/
 .env*
+.env
