@@ -1,6 +1,9 @@
 import React, { useState } from "react";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Login from './pages/Login';
+import Register from './pages/Register';
 
-function App() {
+function Home() {
   const [text, setText] = useState("");
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -10,9 +13,10 @@ function App() {
     e.preventDefault();
     setLoading(true);
     setError(null);
- const API_URL = import.meta.env.VITE_API_URL;
+    const API_URL = import.meta.env.VITE_API_URL;
+
     try {
-     const res = await fetch(`${API_URL}/entities`, {
+      const res = await fetch(`${API_URL}/entities`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -58,6 +62,18 @@ function App() {
         </div>
       )}
     </div>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+      </Routes>
+    </Router>
   );
 }
 
