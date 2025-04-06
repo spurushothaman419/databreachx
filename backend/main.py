@@ -1,17 +1,23 @@
 from fastapi import FastAPI, Request
-from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 import spacy
 
 app = FastAPI()
 
-# ✅ IMPORTANT: CORS fix
+# ✅ Allow localhost and vercel app
+origins = [
+    "http://localhost:5173",
+    "https://databreachx.vercel.app"
+]
+
+# ✅ Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://databreachx.vercel.app"],  # only allow frontend origin
+    allow_origins=origins,              # Who can call this API
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["*"],                # Allow all HTTP methods
+    allow_headers=["*"],                # Allow all headers
 )
 
 nlp = spacy.load("en_core_web_sm")
