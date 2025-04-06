@@ -1,23 +1,21 @@
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://databreachx.vercel.app"],  # Change this to your Vercel frontend URL
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 @app.get("/")
-def read_root():
-    return {"message": "Welcome to DataBreachX API"}
+async def root():
+    return {"message": "✅ FastAPI backend is live"}
 
-@app.post("/search")
-async def search_data(request: Request):
-    body = await request.json()
-    query = body.get("query", "")
-    return {"query": query, "matches": []}
+@app.get("/entities")
+async def get_entities():
+    return {"entities": ["email", "name", "dob", "address", "id_number"]}
