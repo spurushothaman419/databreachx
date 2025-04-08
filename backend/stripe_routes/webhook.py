@@ -8,7 +8,7 @@ router = APIRouter()
 stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
 endpoint_secret = os.getenv("STRIPE_WEBHOOK_SECRET")
 
-@router.post("/stripe/webhook")
+@router.post("/stripe_routes/webhook")
 async def stripe_webhook(request: Request):
     payload = await request.body()
     sig_header = request.headers.get("stripe-signature")
