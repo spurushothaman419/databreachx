@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Request
-from stripe import license as license_routes
-from stripe import webhook as webhook_routes
+from stripe_routes import license as license_routes
+from stripe_routes import webhook as webhook_routes
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import spacy
