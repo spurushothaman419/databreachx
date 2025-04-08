@@ -2,6 +2,12 @@ import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Dashboard from "./pages/Dashboard";
+import Admin from "./pages/Admin";
+import EntityDetector from "./pages/EntityDetector";
+import AuthGuard from "./components/AuthGuard";
+import { AuthProvider } from "./hooks/useAuth";
+
 
 function Home() {
   const [text, setText] = useState("");
@@ -67,13 +73,38 @@ function Home() {
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-      </Routes>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route
+            path="/dashboard"
+            element={
+              <AuthGuard>
+                <Dashboard />
+              </AuthGuard>
+            }
+          />
+          <Route
+            path="/admin"
+            element={
+              <AuthGuard>
+                <Admin />
+              </AuthGuard>
+            }
+          />
+          <Route
+            path="/"
+            element={
+              <AuthGuard>
+                <EntityDetector />
+              </AuthGuard>
+            }
+          />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 

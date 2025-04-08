@@ -1,9 +1,13 @@
 from fastapi import FastAPI, Request
+from stripe import license, webhook
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import spacy
 
 app = FastAPI()
+
+app.include_router(license.router)
+app.include_router(webhook.router)
 
 # ✅ Allow localhost and vercel app
 origins = [
