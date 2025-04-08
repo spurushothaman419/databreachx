@@ -15,6 +15,11 @@ def generate_license_key(user_email: str) -> str:
 def verify_license_key(key: str) -> bool:
     return key in licenses
 
+@router.get("/license")
+def get_license_status():
+    return {"message": "License route works"}
+
+
 @router.post("/license/generate")
 async def generate(data: dict):
     email = data.get("email")

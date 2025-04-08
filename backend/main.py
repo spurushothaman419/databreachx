@@ -7,8 +7,8 @@ import spacy
 
 app = FastAPI()
 
-app.include_router(license_routes.router)
-app.include_router(webhook_routes.router)
+app.include_router(license_routes.router, prefix="/stripe_routes")
+app.include_router(webhook_routes.router, prefix="/stripe_routes")
 
 # ✅ Allow localhost and vercel app
 origins = [
