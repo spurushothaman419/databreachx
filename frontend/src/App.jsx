@@ -5,7 +5,7 @@ import Landing from './pages/Landing';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
-import AdminDashboard from './pages/AdminDashboard';
+import Admin from './pages/Admin';
 import EntityDetector from './pages/EntityDetector';
 
 import { AuthProvider } from './AuthContext';
@@ -20,7 +20,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/dashboard" element={<AuthGuard><Dashboard /></AuthGuard>} />
-          <Route path="/admin" element={<AuthGuard><AdminDashboard /></AuthGuard>} />
+          <Route path="/admin" element={<AuthGuard><Admin /></AuthGuard>} />
           <Route path="/analyze" element={<AuthGuard><EntityDetector /></AuthGuard>} />
         </Routes>
       </Router>
