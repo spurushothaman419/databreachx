@@ -9,7 +9,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import EntityDetector from './pages/EntityDetector';
 
 import { AuthProvider } from './AuthContext';
-import AuthGuard from './AuthGuard';
+import AuthGuard from './components/AuthGuard';
 
 function App() {
   return (
