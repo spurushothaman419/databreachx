@@ -1,19 +1,24 @@
+// Dashboard.jsx
 import React, { useEffect } from "react";
 import { useAuth } from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
-  const { user, logout } = useAuth();
+  const { user, loading, logout } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!user) {
+    if (!loading && !user) {
       navigate("/login");
     }
-  }, [user, navigate]);
+  }, [user, loading, navigate]);
+
+  if (loading) {
+    return <p>Checking authentication...</p>;
+  }
 
   if (!user) {
-    return <p>Loading dashboard...</p>;
+    return null; // Will be redirected
   }
 
   return (

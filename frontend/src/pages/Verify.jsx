@@ -1,24 +1,22 @@
 // src/pages/Verify.jsx
-import { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { supabase } from '../supabaseClient'
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { supabase } from '../supabaseClient';
 
 const Verify = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const handleVerification = async () => {
-      const { data, error } = await supabase.auth.getSession()
-      if (data.session) {
-        navigate('/dashboard')
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        navigate('/dashboard');
       } else {
-        navigate('/login')  // fallback if session fails
+        navigate('/login');
       }
-    }
-    handleVerification()
-  }, [])
+    });
+  }, [navigate]);
 
-  return <div>Verifying... Please wait.</div>
-}
+  return <p>Verifying login...</p>;
+};
 
-export default Verify
+export default Verify;

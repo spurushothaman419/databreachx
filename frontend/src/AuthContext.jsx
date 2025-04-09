@@ -1,35 +1,37 @@
-// frontend/src/AuthContext.jsx
-import { createContext, useContext, useEffect, useState } from 'react';
+// AuthContext.jsx
+import { createContext, useEffect, useState } from 'react';
 import { supabase } from './supabaseClient';
 
-const AuthContext = createContext();
+export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [session, setSession] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const currentSession = supabase.auth.getSession();
-    currentSession.then(({ data }) => {
-      setSession(data?.session);
-      setUser(data?.session?.user || null);
+    const session = supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user || null);
+      setLoading(false);
     });
 
-    const { data: authListener } = supabase.auth.onAuthStateChange((_event, newSession) => {
-      setSession(newSession);
-      setUser(newSession?.user || null);
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user || null);
+      setLoading(false);
     });
 
     return () => {
-      authListener.subscription.unsubscribe();
+      listener?.subscription.unsubscribe();
     };
   }, []);
 
+  const logout = async () => {
+    await supabase.auth.signOut();
+    setUser(null);
+  };
+
   return (
-    <AuthContext.Provider value={{ user, session }}>
+    <AuthContext.Provider value={{ user, loading, logout }}>
       {children}
     </AuthContext.Provider>
   );
 };
-
-export const useAuth = () => useContext(AuthContext);
