@@ -19,22 +19,28 @@ const Login = () => {
   };
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      if (data.session) {
-        navigate('/dashboard');
-      }
-    });
+  const checkSession = async () => {
+    const { data } = await supabase.auth.getSession();
+    const isMagicLinkCallback = window.location.href.includes('type=magiclink');
 
-    const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
-      if (session) {
-        navigate('/dashboard');
-      }
-    });
+    if (data.session && isMagicLinkCallback) {
+      navigate('/dashboard');
+    }
+  };
 
-    return () => {
-      listener.subscription.unsubscribe();
-    };
-  }, []);
+  checkSession();
+
+  const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
+    if (event === 'SIGNED_IN') {
+      navigate('/dashboard');
+    }
+  });
+
+  return () => {
+    listener.subscription.unsubscribe();
+  };
+}, []);
+
 
   return (
     <div style={{ padding: '2rem' }}>
