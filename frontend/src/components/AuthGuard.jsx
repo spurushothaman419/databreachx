@@ -1,42 +1,40 @@
 import React, { useEffect, useState } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 
 const AuthGuard = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState(null);
-  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const fetchSession = async () => {
       const { data } = await supabase.auth.getSession();
       setSession(data?.session);
       setLoading(false);
-
-      if (data?.session) {
-        navigate('/dashboard');
-      }
     };
 
     fetchSession();
 
     const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session) {
-        setSession(session);
-        navigate('/dashboard');
-      } else {
-        setSession(null);
-      }
+      setSession(session);
     });
 
     return () => {
       authListener.subscription.unsubscribe();
     };
-  }, [navigate]);
+  }, []);
 
   if (loading) return <div>Loading...</div>;
 
-  if (!session) return <Navigate to="/login" />;
+  // If not logged in, redirect to login
+  if (!session) return <Navigate to="/login" state={{ from: location }} replace />;
+
+  // If logged in and tries to visit login/register, redirect to dashboard
+  const protectedRoutes = ['/login', '/register'];
+  if (session && protectedRoutes.includes(location.pathname)) {
+    return <Navigate to="/dashboard" replace />;
+  }
 
   return children;
 };

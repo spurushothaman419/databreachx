@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-// frontend/src/pages/Register.jsx
 import { supabase } from '../supabaseClient';
 import { useNavigate } from 'react-router-dom';
 
@@ -7,31 +6,36 @@ export default function Register() {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
- 
-  useEffect(() => {
-    const checkSession = async () => {
-      const session = await supabase.auth.getSession();
-      if (session?.data?.session) {
-        window.location.href = '/dashboard';
-      }
-    };
-    checkSession();
-  }, []);
 
   const handleRegister = async (e) => {
     e.preventDefault();
-
-    const { data, error } = await supabase.auth.signInWithOtp({ email });
+    const { error } = await supabase.auth.signInWithOtp({ email });
 
     if (error) {
-      alert('Registration failed');
-      return;
+      setMessage(`❌ Registration failed: ${error.message}`);
+    } else {
+      setMessage('✅ Check your email for the magic link to complete registration.');
     }
-
-    alert('Check your email for the magic link!');
-    navigate('/dashboard'); // 👈 redirect after signup
   };
-  
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      if (data.session) {
+        navigate('/dashboard');
+      }
+    });
+
+    const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
+      if (session) {
+        navigate('/dashboard');
+      }
+    });
+
+    return () => {
+      listener.subscription.unsubscribe();
+    };
+  }, []);
+
   return (
     <div style={{ padding: '2rem' }}>
       <h2>📝 Register</h2>

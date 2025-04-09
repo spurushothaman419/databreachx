@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
 import { useNavigate } from 'react-router-dom';
 
@@ -14,12 +14,27 @@ const Login = () => {
     if (error) {
       setMessage(`❌ ${error.message}`);
     } else {
-      setMessage('✅ Magic link sent! Check your email.');
-      setTimeout(() => {
-        navigate('/dashboard');
-      }, 2000);
+      setMessage('✅ Magic link sent! Please check your email to log in.');
     }
   };
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      if (data.session) {
+        navigate('/dashboard');
+      }
+    });
+
+    const { data: listener } = supabase.auth.onAuthStateChange((event, session) => {
+      if (session) {
+        navigate('/dashboard');
+      }
+    });
+
+    return () => {
+      listener.subscription.unsubscribe();
+    };
+  }, []);
 
   return (
     <div style={{ padding: '2rem' }}>
