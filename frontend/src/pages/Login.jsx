@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 // frontend/src/pages/Login.jsx
-import { useState } from 'react';
 import { supabase } from '../supabaseClient';
 import { useNavigate } from 'react-router-dom';
 
@@ -54,3 +53,5 @@ useEffect(() => {
     </div>
   );
 }
+
+export default Login;
