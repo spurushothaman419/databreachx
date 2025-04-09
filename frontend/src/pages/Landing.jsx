@@ -1,42 +1,29 @@
-// src/pages/Landing.jsx
-
-import { useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 
-function Landing() {
+const Landing = () => {
   const navigate = useNavigate();
-  const location = useLocation();
 
   useEffect(() => {
-    const checkSessionAndRedirect = async () => {
+    const checkSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
-
-      // Only redirect if the user was redirected here via magic link confirmation
-      const isMagicLink = location.hash.includes('access_token');
-
-      if (session?.user && isMagicLink) {
+      if (session) {
         navigate('/dashboard');
       }
     };
-
-    checkSessionAndRedirect();
-  }, [navigate, location]);
+    checkSession();
+  }, [navigate]);
 
   return (
     <div style={{ padding: '2rem' }}>
-      <h1>🚨 <strong>Welcome to DataBreachX</strong></h1>
+      <h1>🚨 Welcome to <strong>DataBreachX</strong></h1>
       <p>Your one-stop tool to detect, monitor, and defend against data breaches.</p>
-      <div style={{ marginTop: '1rem' }}>
-        <a href="/login">
-          <button>🔐 Login</button>
-        </a>
-        <a href="/register" style={{ marginLeft: '1rem' }}>
-          <button>📄 Register</button>
-        </a>
-      </div>
+      <br />
+      <button onClick={() => navigate('/login')}>🔐 Login</button>
+      <button onClick={() => navigate('/register')} style={{ marginLeft: '1rem' }}>📝 Register</button>
     </div>
   );
-}
+};
 
 export default Landing;
