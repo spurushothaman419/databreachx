@@ -33,9 +33,8 @@ useEffect(() => {
   alert('Check your email for the magic link!');
   navigate('/dashboard'); // 👈 redirect after success
 };
-  
 }
-
+  
   return (
     <div style={{ padding: '2rem' }}>
       <h2>🔐 Login with Email</h2>
@@ -52,6 +51,5 @@ useEffect(() => {
       {message && <p>{message}</p>}
     </div>
   );
-}
 
 export default Login;
