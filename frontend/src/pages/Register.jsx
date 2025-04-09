@@ -8,31 +8,29 @@ export default function Register() {
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
  
-useEffect(() => {
-  const checkSession = async () => {
-        const session = await supabase.auth.getSession();
-        if (session?.data?.session) {
-      window.location.href = '/dashboard';
-    }
-  };
-  checkSession();
-}, []);
+  useEffect(() => {
+    const checkSession = async () => {
+      const session = await supabase.auth.getSession();
+      if (session?.data?.session) {
+        window.location.href = '/dashboard';
+      }
+    };
+    checkSession();
+  }, []);
 
   const handleRegister = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  const { data, error } = await supabase.auth.signInWithOtp({
-    email,
-  });
+    const { data, error } = await supabase.auth.signInWithOtp({ email });
 
-  if (error) {
-    alert('Registration failed');
-    return;
-  }
+    if (error) {
+      alert('Registration failed');
+      return;
+    }
 
-  alert('Check your email for the magic link!');
-  navigate('/dashboard'); // 👈 redirect after signup
-};
+    alert('Check your email for the magic link!');
+    navigate('/dashboard'); // 👈 redirect after signup
+  };
   
   return (
     <div style={{ padding: '2rem' }}>
@@ -51,5 +49,3 @@ useEffect(() => {
     </div>
   );
 }
-
-export default Register;
