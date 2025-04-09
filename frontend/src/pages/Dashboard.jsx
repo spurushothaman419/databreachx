@@ -6,6 +6,10 @@ import { useNavigate } from "react-router-dom";
 const Dashboard = () => {
   const { user, loading, logout } = useAuth();
   const navigate = useNavigate();
+const handleLogout = async () => {
+  await supabase.auth.signOut();
+  window.location.href = '/';
+};
 
   useEffect(() => {
     if (!loading && !user) {

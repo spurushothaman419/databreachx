@@ -9,7 +9,9 @@ export default function Register() {
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    const { error } = await supabase.auth.signInWithOtp({ email });
+    const { error } = await supabase.auth.signInWithOtp({ email, options: {
+    emailRedirectTo: 'https://databreachx.vercel.app/verify'
+  } });
 
     if (error) {
       setMessage(`❌ Registration failed: ${error.message}`);
@@ -21,9 +23,10 @@ export default function Register() {
   useEffect(() => {
   const checkSession = async () => {
     const { data } = await supabase.auth.getSession();
-    const isMagicLinkCallback = window.location.href.includes('type=magiclink');
+    const url = window.location.href;
+const isRedirect = url.includes('type=magiclink') || url.includes('type=signup');
 
-    if (data.session && isMagicLinkCallback) {
+    if (data.session && isRedirect) {
       navigate('/dashboard');
     }
   };
