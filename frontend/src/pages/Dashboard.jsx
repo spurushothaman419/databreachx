@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 const Dashboard = () => {
   const { user, loading, logout } = useAuth();
   const navigate = useNavigate();
+
 const handleLogout = async () => {
   await supabase.auth.signOut();
   window.location.href = '/';
@@ -29,7 +30,7 @@ const handleLogout = async () => {
     <div style={{ padding: "2rem" }}>
       <h2>Welcome, {user.email}</h2>
       <p>Tier: {user.user_metadata?.tier || "Free"}</p>
-      <button onClick={() => { logout(); navigate("/login"); }}>
+      <button onClick={handleLogout}>
         Logout
       </button>
     </div>
