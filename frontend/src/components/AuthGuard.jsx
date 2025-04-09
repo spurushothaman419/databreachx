@@ -1,12 +1,40 @@
 import React from "react";
-import { Navigate } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth";
+// frontend/src/components/AuthGuard.jsx
+import { useEffect, useState } from 'react';
+import { Navigate } from 'react-router-dom';
+import { supabase } from '../supabaseClient';
 
 const AuthGuard = ({ children }) => {
-  const { user } = useAuth();
+  const [loading, setLoading] = useState(true);
+  const [session, setSession] = useState(null);
 
-  if (!user) return <Navigate to="/login" />;
+  useEffect(() => {
+    const fetchSession = async () => {
+      const { data, error } = await supabase.auth.getSession();
+      setSession(data?.session);
+      setLoading(false);
+    };
+    fetchSession();
+  }, []);
+
+  if (loading) return <div>Loading...</div>;
+
+  if (!session) {
+    return <Navigate to="/login" />;
+  }
+
   return children;
 };
+
+useEffect(() => {
+  supabase.auth.getSession().then(({ data: { session } }) => {
+    if (session) navigate('/dashboard');
+  });
+
+  supabase.auth.onAuthStateChange((_event, session) => {
+    if (session) navigate('/dashboard');
+  });
+}, []);
+
 
 export default AuthGuard;

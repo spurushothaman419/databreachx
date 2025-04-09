@@ -1,16 +1,41 @@
+import { useState, useEffect } from 'react';
 // frontend/src/pages/Login.jsx
 import { useState } from 'react';
 import { supabase } from '../supabaseClient';
+import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
-
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    const { error } = await supabase.auth.signInWithOtp({ email });
-    setMessage(error ? `❌ ${error.message}` : '✅ Check your email for the magic link');
+  const navigate = useNavigate();
+ 
+useEffect(() => {
+  const checkSession = async () => {
+        const session = await supabase.auth.getSession();
+        if (session?.data?.session) {
+      window.location.href = '/dashboard';
+    }
   };
+  checkSession();
+}, []);
+
+ const handleLogin = async (e) => {
+  e.preventDefault();
+
+  const { data, error } = await supabase.auth.signInWithOtp({
+    email,
+  });
+
+  if (error) {
+    alert('Error logging in');
+    return;
+  }
+
+  alert('Check your email for the magic link!');
+  navigate('/dashboard'); // 👈 redirect after success
+};
+  
+}
 
   return (
     <div style={{ padding: '2rem' }}>
